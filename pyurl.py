@@ -2,9 +2,22 @@
 import os
 import json
 
-# Create redirects folder
-if not os.path.exists("redirects"):
-	os.makedirs("redirects")
+def configure():
+	configuration = {"hosting": "", "ssh_address": ""}
+	hosting = input("Should this program automatically use Git to push to a repo?\n\"YES\" or \"NO\"\n")
+	print("\n")
+	if hosting == "YES":
+		ssh_address=input("What is the ssh address of your Git repository?\nFor example, git@github.com:slashtechno/pyurl.git\n")
+		print("\n")
+		configuration.update({"hosting": True, "ssh_address": ssh_address})
+	else:
+		print("It seems you either responded \"NO\" or an invalid response\nProgram is proceeding as if \"NO\" was set")
+		configuration.update({"hosting": False, "ssh_address": ""})
+	with open("config.json", "w") as config_file:
+			configuration_json = json.dumps(configuration, indent=4)
+
+	
+		
 
 def createRedirect():
 	# Get URl to shorten and shortend URL ending
@@ -25,4 +38,19 @@ def createRedirect():
 			redirect_template_end=template_end.read()
 		redirect_file.write(redirect_template_start+long_url+redirect_template_end)
 
-createRedirect()
+main_directory = os.getcwd()
+
+# Create redirects folder
+if not os.path.exists("redirects"):
+	os.makedirs("redirects")
+	os.chdir("redirects")
+	os.system("git init")
+	os.chdir(main_directory)
+
+
+if os.path.exists("config.json"):
+	with open("config.json", "r") as config_file:
+		config_json = config_file.read()
+	configuration = json.loads(config_json)
+else:
+	configure()
