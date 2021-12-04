@@ -11,15 +11,16 @@ def configure():
 		print("\n")
 		configuration.update({"hosting": True, "ssh_address": ssh_address})
 	else:
-		print("It seems you either responded \"NO\" or an invalid response\nProgram is proceeding as if \"NO\" was set")
+		print("It seems you either responded \"NO\" or an invalid response\nProgram is proceeding as if \"NO\" was set\n")
 		configuration.update({"hosting": False, "ssh_address": ""})
 	with open("config.json", "w") as config_file:
 			configuration_json = json.dumps(configuration, indent=4)
+			config_file.write(configuration_json)
 
 	
 		
 
-def createRedirect():
+def create_redirect():
 	# Get URl to shorten and shortend URL ending
 	long_url=input("URL to shorten?\nRemember to start with https:// or http://\n")
 	print("\n")
@@ -54,3 +55,21 @@ if os.path.exists("config.json"):
 	configuration = json.loads(config_json)
 else:
 	configure()
+while True:
+	action = int(input("What would you like to do?\n1) Shorten a URL\n2) Configure this program\n3) List redirects\n4) Delete a redirect\n5) Exit program\n"))
+	print("\n")
+	if action == 1:
+		create_redirect()
+		# push_to_git()
+	if action == 2:
+		configure()
+	if action == 3:
+		os.listdir("redirects")
+		print("\n")
+	if action == 4:
+		os.listdir("redirects")
+		print("\n")
+		redirect_to_remove = input("What redirect would you like to remove\n")
+		os.remove("redirects/"+redirect_to_remove)
+	if action == 5:
+		exit()
