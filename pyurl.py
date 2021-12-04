@@ -11,6 +11,12 @@ def createRedirect():
 	long_url=input("URL to shorten?\nRemember to start with https:// or http://\n")
 	print("\n")
 	redirect_ending=input("What would you like the redirect URL ending to be?\nFor example, for example.com/shorturl type \"shorturl\"\n")
+	print("\n")
+	if os.path.exists("redirects/"+redirect_ending+".html") == True:
+		while os.path.exists("redirects/"+redirect_ending+".html") == True:
+			print("A redirect with that ending already exists\nPlease pick a diffrent ending\n")
+			redirect_ending=input("What would you like the redirect URL ending to be?\nFor example, for example.com/shorturl type \"shorturl\"\n")
+			print("\n")
 	# Create and write to redirect HTML file
 	with open("redirects/"+redirect_ending+".html", "w") as redirect_file:
 		with open("redirect-template-start", "r") as template_start:
