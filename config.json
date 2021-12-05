@@ -1,4 +1,4 @@
 {
-    "hosting": false,
-    "ssh_address": ""
+    "hosting": true,
+    "ssh_address": "git@github.com:slashtechno/ssh-test.git"
 }

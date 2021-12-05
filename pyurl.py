@@ -1,6 +1,8 @@
 #!/bin/python3
 import os
 import json
+import git
+from git.refs import remote #  pip install GitPython
 
 def configure():
 	configuration = {"hosting": "", "ssh_address": ""}
@@ -10,6 +12,9 @@ def configure():
 		ssh_address=input("What is the ssh address of your Git repository?\nFor example, git@github.com:slashtechno/pyurl.git\n")
 		print("\n")
 		configuration.update({"hosting": True, "ssh_address": ssh_address})
+		os.chdir("redirects")
+		os.system("git remote add origin "+ssh_address)
+		os.chdir(main_directory)
 	else:
 		print("It seems you either responded \"NO\" or an invalid response\nProgram is proceeding as if \"NO\" was set\n")
 		configuration.update({"hosting": False, "ssh_address": ""})
@@ -39,6 +44,13 @@ def create_redirect():
 			redirect_template_end=template_end.read()
 		redirect_file.write(redirect_template_start+long_url+redirect_template_end)
 
+def push_to_git():
+	os.chdir("redirects")
+	os.system("git add .")
+	os.system("git commit -m \"Automated commit\"")
+	os.system("git push origin")
+	os.chdir(main_directory)
+
 main_directory = os.getcwd()
 
 # Create redirects folder
@@ -47,7 +59,8 @@ if not os.path.exists("redirects"):
 	os.chdir("redirects")
 	os.system("git init")
 	os.chdir(main_directory)
-
+else:
+	pass
 
 if os.path.exists("config.json"):
 	with open("config.json", "r") as config_file:
@@ -55,12 +68,21 @@ if os.path.exists("config.json"):
 	configuration = json.loads(config_json)
 else:
 	configure()
+	with open("config.json", "r") as config_file:
+		config_json = config_file.read()
+	configuration = json.loads(config_json)
+
 while True:
+	if configuration["hosting"] == True:
+		git.rmtree("redirects")
+		# os.chdir("redirects")
+		os.system("git clone "+configuration["ssh_address"]+" redirects")
+		os.chdir(main_directory)
 	action = int(input("What would you like to do?\n1) Shorten a URL\n2) Configure this program\n3) List redirects\n4) Delete a redirect\n5) Exit program\n"))
 	print("\n")
 	if action == 1:
 		create_redirect()
-		# push_to_git()
+		push_to_git()
 	if action == 2:
 		configure()
 	if action == 3:
