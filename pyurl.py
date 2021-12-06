@@ -77,6 +77,7 @@ while True:
 		git.rmtree("redirects")
 		# os.chdir("redirects")
 		os.system("git clone "+configuration["ssh_address"]+" redirects")
+		print("\n")
 		os.chdir(main_directory)
 	action = int(input("What would you like to do?\n1) Shorten a URL\n2) Configure this program\n3) List redirects\n4) Delete a redirect\n5) Exit program\n"))
 	print("\n")
